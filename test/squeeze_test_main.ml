@@ -11,4 +11,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *)
-let _ = Squeeze_test.go ()
+let _ = 
+  Coverage.init "squeeze_test";  
+  Squeeze_test.go ()

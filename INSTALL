@@ -1,3 +1,6 @@
+
+# Installation
+
 The simplest way to install is via opam:
 
     opam init
@@ -12,3 +15,14 @@ To build by hand first install dependencies:
     * syslog
     * re
     * xcp
+    * bisect_ppx
+
+# Profiling for coverage
+
+This code can be instrumented for code coverage. See
+[COVERAGE.md](./COVERAGE.md) for details.
+
+    make coverage
+    make
+
+

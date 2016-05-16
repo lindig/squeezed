@@ -29,7 +29,16 @@ let options = [
 	"domain-zero-dynamic-max", Arg.String (fun x -> Squeeze.domain_zero_dynamic_max := if x = "auto" then None else Some (Int64.of_string x)), (fun () -> match !Squeeze.domain_zero_dynamic_max with None -> "using the static-max value" | Some x -> Int64.to_string x), "Maximum memory to allow domain 0";
 ]
 
+let stop signal =
+	debug "squeezed version %d.%d terminating" major_version minor_version;
+  exit 0 (* make sure, [at_exit] handlers are run *)
+
+let handle_shutdown () =
+	Sys.set_signal Sys.sigterm (Sys.Signal_handle stop)
+
 let _ = 
+  Coverage.init name;
+  handle_shutdown ();
 	debug "squeezed version %d.%d starting" major_version minor_version;
 
 	configure ~options ();

@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 3e84eb1eaa573b339c1fdfdc6d6759f6)
+# DO NOT EDIT (digest: 4f4eb6ec62535f46a954dea443fddaa9)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -14,6 +14,8 @@ true: annot, bin_annot
 ".git": not_hygienic
 "_darcs": -traverse
 "_darcs": not_hygienic
+# Library profiling
+"profiling/profiling.cmxs": use_profiling
 # Library squeeze
 "lib/squeeze.cmxs": use_squeeze
 <lib/*.ml{,i,y}>: pkg_re
@@ -36,6 +38,7 @@ true: annot, bin_annot
 <src/squeezed.{native,byte}>: pkg_xenstore.unix
 <src/squeezed.{native,byte}>: pkg_xenstore_transport
 <src/squeezed.{native,byte}>: pkg_xenstore_transport.unix
+<src/squeezed.{native,byte}>: use_profiling
 <src/squeezed.{native,byte}>: use_squeeze
 <src/*.ml{,i,y}>: pkg_re
 <src/*.ml{,i,y}>: pkg_re.str
@@ -51,6 +54,7 @@ true: annot, bin_annot
 <src/*.ml{,i,y}>: pkg_xenstore.unix
 <src/*.ml{,i,y}>: pkg_xenstore_transport
 <src/*.ml{,i,y}>: pkg_xenstore_transport.unix
+<src/*.ml{,i,y}>: use_profiling
 <src/*.ml{,i,y}>: use_squeeze
 # Executable test
 <test/squeeze_test_main.{native,byte}>: pkg_re
@@ -60,6 +64,7 @@ true: annot, bin_annot
 <test/squeeze_test_main.{native,byte}>: pkg_unix
 <test/squeeze_test_main.{native,byte}>: pkg_xcp
 <test/squeeze_test_main.{native,byte}>: pkg_xenctrl
+<test/squeeze_test_main.{native,byte}>: use_profiling
 <test/squeeze_test_main.{native,byte}>: use_squeeze
 <test/*.ml{,i,y}>: pkg_re
 <test/*.ml{,i,y}>: pkg_re.str
@@ -68,5 +73,6 @@ true: annot, bin_annot
 <test/*.ml{,i,y}>: pkg_unix
 <test/*.ml{,i,y}>: pkg_xcp
 <test/*.ml{,i,y}>: pkg_xenctrl
+<test/*.ml{,i,y}>: use_profiling
 <test/*.ml{,i,y}>: use_squeeze
 # OASIS_STOP

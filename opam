@@ -18,4 +18,5 @@ depends: [
   "xenstore"
   "xenstore_transport"
   "xenctrl" {>= "0.9.20"}
+  "bisect_ppx"
 ]
