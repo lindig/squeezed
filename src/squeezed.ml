@@ -31,14 +31,14 @@ let options = [
 
 let stop signal =
 	debug "squeezed version %d.%d terminating" major_version minor_version;
-  exit 0 (* make sure, [at_exit] handlers are run *)
+	exit 0 (* make sure, [at_exit] handlers are run *)
 
 let handle_shutdown () =
 	Sys.set_signal Sys.sigterm (Sys.Signal_handle stop)
 
 let _ = 
-  Coverage.init name;
-  handle_shutdown ();
+	Coverage.init name;
+	handle_shutdown ();
 	debug "squeezed version %d.%d starting" major_version minor_version;
 
 	configure ~options ();
