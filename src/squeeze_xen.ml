@@ -28,8 +28,9 @@ open Xstringext
 open Fun
 
 module M = Debug.Make(struct let name = "memory" end)
-let debug = Squeeze.debug
-let error = Squeeze.error 
+let debug' = Squeeze.debug'
+let debug  = Squeeze.debug
+let error  = Squeeze.error
 
 let _initial_reservation = "/memory/initial-reservation"  (* immutable *)
 let _target              = "/memory/target"               (* immutable *)
@@ -96,7 +97,7 @@ module Domain = struct
 			let gone_domids = set_difference known_domids alive_domids in
 			List.iter
 			(fun d ->
-				debug "Remove domid %d in cache" d;
+				debug' "Remove domid %d in cache" d;
 				Hashtbl.remove cache d
 			) gone_domids
 	  )
@@ -135,7 +136,7 @@ module Domain = struct
 				  let arrived = IntSet.diff existing !watching_domids in
 				  IntSet.iter
 					  (fun domid ->
-						  debug "Adding watches for domid: %d" domid;
+						  debug' "Adding watches for domid: %d" domid;
 						  List.iter (fun x ->
 							  try
 								  Client.immediate (get_client ()) (fun xs -> Client.watch xs x (watch_token domid))
@@ -146,7 +147,7 @@ module Domain = struct
 				  let gone = IntSet.diff !watching_domids existing in
 				  IntSet.iter
 					  (fun domid ->
-						  debug "Removing watches for domid: %d" domid;
+						  debug' "Removing watches for domid: %d" domid;
 						  List.iter (fun x ->
 							  try
 								  Client.immediate (get_client ()) (fun xs -> Client.unwatch xs x (watch_token domid))
@@ -213,7 +214,7 @@ module Domain = struct
 								| None -> ()
 								| Some per_domain ->
 									let key = "/" ^ (String.concat "/" rest) in
-									debug "watch %s <- %s" key (Opt.default "None" value);
+									debug' "watch %s <- %s" key (Opt.default "None" value);
 									Hashtbl.replace per_domain.keys key value
 							)
 					| _  -> debug "Ignoring unexpected watch: %s" path in
@@ -576,7 +577,7 @@ let make_host ~verbose ~xc =
 	(* Sum up the 'reservations' which exist separately from domains *)
 	let non_domain_reservations = Squeezed_state.total_reservations Squeezed_state._service domain_infolist in
 	if verbose && non_domain_reservations <> 0L
-	then debug "Total non-domain reservations = %Ld" non_domain_reservations;
+	then debug' "Total non-domain reservations = %Ld" non_domain_reservations;
 	reserved_kib := Int64.add !reserved_kib non_domain_reservations;
 
 	let host = Squeeze.make_host ~domains ~free_mem_kib:(Int64.sub free_mem_kib !reserved_kib) in

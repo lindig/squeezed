@@ -24,6 +24,8 @@ open Pervasiveext
 module D = Debug.Make(struct let name = Memory_interface.service_name end)
 open D
 
+let debug' = debug (* high log frequency  - remove? *)
+
 type context = unit
 
 (** The main body of squeezed is single-threaded, so we protect it with a mutex here. *)
@@ -90,7 +92,7 @@ let reserve_memory _ dbg session_id kib =
 		Xenctrl.with_intf
 		(fun xc ->
 			Squeeze_xen.free_memory ~xc kib;
-			debug "reserved %Ld kib for reservation %s" kib reservation_id;
+			debug' "reserved %Ld kib for reservation %s" kib reservation_id;
 			add_reservation _service session_id reservation_id (Int64.to_string kib)
 		);
 		reservation_id
@@ -107,7 +109,7 @@ let reserve_memory_range _ dbg session_id min max =
 		Xenctrl.with_intf
 		(fun xc ->
 			let amount = Squeeze_xen.free_memory_range ~xc min max in
-			debug "reserved %Ld kib for reservation %s" amount reservation_id;
+			debug' "reserved %Ld kib for reservation %s" amount reservation_id;
 			add_reservation _service session_id reservation_id (Int64.to_string amount);
 			reservation_id, amount
 		)

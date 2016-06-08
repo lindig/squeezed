@@ -32,8 +32,9 @@ let start = Unix.gettimeofday ()
 
 module D = Debug.Make(struct let name = "xenops" end)
 
-let debug = D.debug
-let error = D.error
+let debug'  = D.debug (* responsible for many log entries *)
+let debug   = D.debug
+let error   = D.error
 
 let manage_domain_zero = ref false
 let gib = Int64.(mul 1024L (mul 1024L 1024L))
@@ -295,8 +296,8 @@ module Proportional = struct
 	  let gamma' = Int64.to_float surplus_memory_kib /. (Int64.to_float total_range) in
 	  let gamma = constrain 0. 1. gamma' in
 	  if verbose then begin
-		  debug "total_range = %Ld gamma = %f gamma' = %f" total_range gamma gamma';
-		  debug "Total additional memory over dynamic_min = %Ld KiB; will set gamma = %.2f (leaving unallocated %Ld KiB)" surplus_memory_kib gamma 
+		  debug' "total_range = %Ld gamma = %f gamma' = %f" total_range gamma gamma';
+		  debug' "Total additional memory over dynamic_min = %Ld KiB; will set gamma = %.2f (leaving unallocated %Ld KiB)" surplus_memory_kib gamma 
 			  (if total_range = 0L then 0L else Int64.of_float (Int64.to_float total_range *. (gamma' -. gamma)));
 	  end;
 	  List.map (fun domain -> domain, domain.dynamic_min_kib +* (allocate gamma domain)) domains
@@ -483,13 +484,13 @@ let change_host_free_memory ?fistpoints io required_mem_kib success_condition =
   (* For performance concern, do not call squeezer if host memory is enough and other VMs target has reached. *)
   let host = snd(io.make_host ()) in
   if io.verbose 
-  then debug "change_host_free_memory required_mem = %Ld KiB target_mem = %Ld KiB free_mem = %Ld KiB" required_mem_kib io.target_host_free_mem_kib host.free_mem_kib;
+  then debug' "change_host_free_memory required_mem = %Ld KiB target_mem = %Ld KiB free_mem = %Ld KiB" required_mem_kib io.target_host_free_mem_kib host.free_mem_kib;
 
   let active_domains = List.filter (fun domain -> domain.can_balloon) host.domains in
   let hit_target domain = has_hit_target domain.inaccuracy_kib domain.memory_actual_kib domain.target_kib in
   let all_targets_reached = List.for_all hit_target active_domains in
   if io.verbose 
-  then debug "change_host_free_memory all VM target meet %B" all_targets_reached;
+  then debug' "change_host_free_memory all VM target meet %B" all_targets_reached;
   let finished = ref ((not (required_mem_kib = io.target_host_free_mem_kib)) && (required_mem_kib <= host.free_mem_kib) && all_targets_reached) in
   let acc = ref (Squeezer.make ()) in
   while not (!finished) do
