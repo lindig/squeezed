@@ -10,21 +10,44 @@ BuildTools: ocamlbuild
 Library squeeze
   Path:	        lib
   Modules:      Squeeze, Memory
-  BuildDepends: stdext, re, re.str, xcp, threads
+  BuildDepends:
+    stdext,
+    re,
+    re.str,
+    xcp,
+    threads
 
 Executable squeezed
   Path:            src
   CompiledObject:  best
   MainIs:          squeezed.ml
   Install:         true
-  BuildDepends:    stdext, squeeze, xenctrl, xenstore, xenstore.unix, xenstore_transport, xenstore_transport.unix, rpclib, xcp, xcp.memory, rpclib.syntax, uuidm, re, re.str
+  BuildDepends:
+    stdext,
+    squeeze,
+    xenctrl,
+    xenstore,
+    xenstore.unix,
+    xenstore_transport,
+    xenstore_transport.unix,
+    rpclib,
+    xcp,
+    xcp.memory,
+    rpclib.syntax,
+    uuidm,
+    re,
+    re.str
 
 Executable test
   Path:            test
   CompiledObject:  best
   MainIs:          squeeze_test_main.ml
-  BuildDepends:    stdext, xenctrl, unix, squeeze
   Install:         false
+  BuildDepends:
+    stdext,
+    xenctrl,
+    unix,
+    squeeze
 
 Test smoke
   Command:         ./squeeze_test_main.native
