@@ -18,6 +18,15 @@
 open Pervasiveext
 open Squeeze
 
+let debug_oc = ref stdout
+let debug fmt = 
+  Printf.kprintf 
+    (fun x -> 
+       Printf.fprintf !debug_oc "[%.2f] %s\n" (Unix.gettimeofday() -. start) x; 
+       flush !debug_oc;
+       D.debug "%s" x
+    ) fmt
+
 (**
 	Computes the memory_actual delta for a VM assuming the balloon driver
 	responds at a given speed. Warning: make sure the balloon_rate * time_passed

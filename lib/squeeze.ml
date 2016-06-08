@@ -32,23 +32,8 @@ let start = Unix.gettimeofday ()
 
 module D = Debug.Make(struct let name = "xenops" end)
 
-let debug_oc = ref stdout
-
-let debug fmt =
-  Printf.kprintf 
-    (fun x -> 
-       Printf.fprintf !debug_oc "[%.2f] %s\n" (Unix.gettimeofday() -. start) x; 
-       flush !debug_oc;
-       D.debug "%s" x
-    ) fmt
-
-let error fmt =
-  Printf.kprintf 
-    (fun x -> 
-       Printf.fprintf !debug_oc "[%.2f] %s\n" (Unix.gettimeofday() -. start) x; 
-       flush !debug_oc;
-       D.error "%s" x
-    ) fmt
+let debug = D.debug
+let error = D.error
 
 let manage_domain_zero = ref false
 let gib = Int64.(mul 1024L (mul 1024L 1024L))
